@@ -12,8 +12,8 @@ findfirstnonzerolength <- function(l) {
   i
 }
 
-con <- file("data/test.csv", "r")
-out <- file("data/test-reduced.csv", "w")
+con <- file("data/test2.csv", "r")
+out <- file("data/test2-reduced.csv", "w")
 bDone <- FALSE
 bLastWasZero <- FALSE
 linenumber <- 0
