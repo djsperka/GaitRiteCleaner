@@ -102,3 +102,28 @@ dezeroGR <- function(df, cols) {
   }
   df2
 }
+
+do2sdGR <- function(df, column_name) {
+  # column index of 'column_name'
+  column_index <- which(names(df)==column_name)
+
+  # Assuming that the column was found....
+  # Get mean, sd, then compute z scores
+  m <- sapply(df[column_index], mean, na.rm=TRUE)
+  s <- sapply(df[column_index], sd, na.rm=TRUE)
+  z <- sapply(df[column_index], function(x)(abs((x-m)/s)))
+  
+    # make two copies of column with name 'column_name'
+  # YYY will be values with >2sd removed
+  # ZZZ will be the >2sd values that were removed from YYY
+  # after all done will rename columns
+  df$YYY <- df[column_index]
+  df$YYY[z<=2.0] <- NA
+  colnames(df)[which(names(df)=="YYY")] <- paste(column_name, "(<=2sd)", sep="")
+  
+  df$ZZZ <- df[column_index]
+  df$ZZZ[z>2.0] <- NA
+  colnames(df)[which(names(df)=="ZZZ")] <- paste(column_name, "(>2sd)", sep="")
+  
+  df
+}
