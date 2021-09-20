@@ -8,61 +8,46 @@ Processing steps:
 
 ```
 source 'rivGR.R'
-'filename' %>% alignGR %>% reduceGR %>% dezeroGR(c(13,14,15,16,17,18)) %>% do2sdGR('Step Length') %>% do2sdGR('Step Time') %>% do2sdGR('Swing Time') %>% do2sdGR('Stride Velocity') %>% do2sdGR('Step Width') %>% do2sdGR('Base of Support')
+df <- processGR('./data/newtest.csv')
 ```
+The result 'df' is a data.frame with the reduced, processed, data set. See below for details on the contents of that data.frame. THIS DATA.FRAME IS NOT YET SAVED TO A FILE! I have assumed that some further processing will be done on this data, so I've not taken the small step of writing the data to a file.
 
-Same steps, more pedantic and more easily understood:
+I've removed a bunch of code that was related to re-formatting the input files. Now, the processing consists of a short function, processGR, that runs the two steps in the processing. 
 
-```
-source 'rivGR.R'
-df <- alignGR('filename')
-df1 <- reduceGR(df)
-df2 <- dezeroGR(df1, c(13, 14, 15, 16, 17, 18))
+## Lists that control the processing
 
-# just rewrite df2 from now on.
-df2 <- do2sdGR(df2, 'Step Length')
-df2 <- do2sdGR(df2, 'Step Time')
-df2 <- do2sdGR(df2, 'Swing Time')
-df2 <- do2sdGR(df2, 'Stride Velocity')
-df2 <- do2sdGR(df2, 'Step Width')
-df2 <- do2sdGR(df2, 'Base of Support')
-```
+The source file 'rivGR.R' has two string lists that control its behavior. These can be changed, as long as the column names exist in the data, and they are spelled correctly!
+
+### columnsReduced
+
+This is a list of columns that are taken from the raw input file and kept in 
+subsequent processing. Each column name must be spelled exactly right! 
+
+### columnsToProcess
+
+These columns are processed according to the 'Excel' analysis instructions (zeros removed, outlier removal). Like the first column, the column names must be spelled exactly right!
 
 ## Steps in the pipeline
 
 I've attempted to duplicate steps outlined in the documents provided. Here is a brief explanation of each step.
 
-### alignGR
-
-This method aligns the columns of the raw csv file obtained from GaitRite. In the sample files provided, some columns were shifted out of alignment. 
-After some discussion, we determined that those shifts were errors in the output format, not bad data. This method removes empty rows, shifts columns, and 
-truncates empty elements from the end of rows to make all columns line up with their headers, and to make each row the same length. No data is removed in this step!
-
-I've assumed that the input to this step is a full export (all fields) from GaitRite.
-
-```
-aligned <- alignGR('/Users/dan/raw_export_from_gaitrite.csv')
-```
 
 ### reduceGR
 
-This method strips all columns not found in the documents provided. The "example cleaned data" spreadsheet contains a subset 
-of the columns in the original (raw) export. This method simply removes all other columns and keeps only those found in "example cleaned data". 
-
-Input is a data.frame that has already been aligned (i.e. output from #alignGR#)
+This method pulls a subset of columns (with all their data) from a data.frame. 
 
 ```
-reduced <- reduceGR(aligned)
+reduced <- reduceGR(df, column_names)
 ```
 
 ### dezeroGR
 
-This method removes zeros (a specific step mentioned in the documents provided) from the columns of interest (there are 6), and replaces them with "NA", not-a-number. 
+This method removes zeros (a specific step mentioned in the documents provided) from the columns of interest (the columns in the input list), and replaces them with "NA", not-a-number. 
 
-Input is a reduced data.frame (output from *reduceGR*) and a vector of column indices (the columns to work on). 
+Input is a reduced data.frame (output from *reduceGR*) and a vector of column names (the columns to work on). 
 
 ```
-dezero <- dezeroGR(reduced, c(13, 14, 15, 16, 17, 18))
+dezero <- dezeroGR(reduced, column_names_to_work_on)
 ```
 
 ### do2sdGR

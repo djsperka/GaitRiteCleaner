@@ -3,98 +3,91 @@ library(stringr)
 library(fs)
 library(dplyr)
 
-# find first element in list l that has nonzero length 
-findfirstnonzerolength <- function(l) {
-  i <- 0
-  for (i in 1:length(l)) {
-    if (str_length(l[[i]]) > 0)
-      break;
-  }
-  if (i == length(l)) 
-    i <- 0
-  i
+# columnsReduced
+#
+# This is a list of columns found in the raw 'single subject full' export
+# files. Each column must exist, and spelling counts!
+# 
+# This list is used to reduce the dataset to just these columns for subsequent 
+# processing (see processGR) 
+
+columnsReduced <- c(
+  "Pt Record #",        
+  "Leg Length Left",  
+  "Leg Length Right",  
+  "Comments",
+  "Velocity",
+  "Cadence",
+  "Step Time(sec) L",
+  "Step Length(cm) L",
+  "Step Time(sec) R",
+  "Step Length(cm) R", 
+  "Swing Time(sec) L", 
+  "Swing Time(sec) R",
+  "Step Length",
+  "Step Time",
+  "Swing Time",
+  "Stride Velocity",
+  "Step Width",
+  "Base of Support"  
+)
+
+# columnsToProcess
+# 
+# This is a list of columns that should undergo the analysis steps
+# outlined in the 'Excel' analysis. Each column named here will have
+# zeros removed, then mean&sd computed, and outliers removed. 
+# See processGR.
+
+columnsToProcess <- c(
+  "Step Length",
+  "Step Time",
+  "Swing Time",
+  "Stride Velocity",
+  "Step Width",
+  "Base of Support"  
+)
+
+# processGR
+#
+# This is the simple pipeline for processing the GaitRite data. 
+# 
+# Input: csvfile - filename of full export single subject GaitRite data file
+#
+# Returns: processed data.frame
+
+processGR <- function(csvfile) {
+  df <- read_csv(csvfile)
+  dfr <- reduceGR(df, columnsReduced)
+  df2 <- dezeroGR(dfr, columnsToProcess)
+  df3 <- do2sdGR(df2, columnsToProcess)
 }
 
-# expecting a  line from a csv file. Truncate to the given number of elements.
-trunc_or_pad_csvline <- function(line, ntokens) {
-  l <- str_split(line, ",")
-  if (length(l[[1]]) < ntokens) {
-    # pad input line with commas
-    output <- paste(line, strrep(",", ntokens-length(l[[1]])), sep="")
-  } else {
-    output <- paste(head(l[[1]],ntokens), collapse=",")  
-  }
-  output
+# reduceGR
+#
+# Return a subset of the the input data.frame, consisting of columns
+# in an input list.
+#
+# Input:
+# df - input data.frame
+# reduced_column_names - column names from df that are kept. 
+#
+# Returns: a data.frame, with the reduced set of columns
+
+reduceGR <- function(df, reduced_column_names) {
+  dfr <- df[reduced_column_names]
 }
 
-
-alignGR <- function(fulldumpfile) {
-  
-  # make sure file exists
-  if (!file_exists(fulldumpfile))
-  {
-    stop('file not found')
-  }
-  
-  # form output filename by removing extension, appending "-aligned.csv"
-  # outfile <- paste(file_path_sans_ext(fulldumpfile), "-aligned.csv", sep="")
-  
-  # open input 
-  con <- file(fulldumpfile, "r")
-
-  # the aligned data will be written to this character vector, line by line
-  outlines <- character(0)
-  
-  # read a line at a time from input file
-  # two empty lines (just commas) are taken to be the end of the data
-  bDone <- FALSE
-  bLastWasZero <- FALSE
-  linenumber <- 0
-  while(!bDone) {
-    line <- readLines(con, 1)
-    linenumber <- linenumber + 1
-    if(length(line) == 0) break
-    l <- str_split(line, ",")
-    f <- findfirstnonzerolength(l[[1]])
-    if (f == 0) {
-      if (bLastWasZero)
-        bDone <- TRUE
-      else {
-        bLastWasZero <- TRUE
-        next
-      }
-    }
-    else {
-      bLastWasZero <- FALSE
-      if (f == 186) {
-        line <- substring(line, 44)   # peel off the extra commas
-      } else if (f == 229) {
-        line <- substring(line, 87)
-      } else if (f == 272) {
-        line <- substring(line, 130)
-      } else if (f %in% c(1, 7, 143)) {
-        # let it pass
-      } else {
-        stop(paste("UNKNOWN line ", linenumber, " first nonzero ", f))
-        bDone <- TRUE
-      }
-    }
-    
-    if (!bDone) {
-      outlines <- c(outlines, line)
-    }
-  }
-  close(con)
-  
-  # truncate all lines at 228 elements
-  outlines_truncated <- unlist(lapply(outlines, trunc_or_pad_csvline, ntokens=228))
-
-  df <- read_csv(outlines_truncated)
-}
-
-reduceGR <- function(df) {
-  dfr <- tibble(df[1], df[5], df[6], df[49], df[12], df[14], df[15], df[16], df[17], df[18], df[29], df[30], df[162], df[165], df[167], df[171], df[175], df[164])
-}
+# dezeroGR
+#
+# Replace zeros in a list of columns with NA (not a number)
+#
+# Input:
+# df - data.frame
+# cols - list of column names. Each column (assumed to exist)
+#        has any zeros replaced with NaN
+#
+# Returns: a data.frame
 
 dezeroGR <- function(df, cols) {
   df2 <- df
@@ -104,27 +97,42 @@ dezeroGR <- function(df, cols) {
   df2
 }
 
-do2sdGR <- function(df, column_name) {
-  # column index of 'column_name'
-  column_index <- which(names(df)==column_name)
+# do2sdGR
+#
+# Compute mean and sd for a list of columns. In each, remove outliers
+# (any value more than 2sd from mean). Create two new columns for each - 
+# one with the retained values, and the other with any values removed. 
+# The original column is not changed. 
+# 
+# Input:
+# df - data.frame
+# column_names - names of columns to work on
+#
+# Returns: data.frame
 
-  # Assuming that the column was found....
-  # Get mean, sd, then compute z scores
-  m <- sapply(df[column_index], mean, na.rm=TRUE)
-  s <- sapply(df[column_index], sd, na.rm=TRUE)
-  z <- sapply(df[column_index], function(x)(abs((x-m)/s)))
+do2sdGR <- function(df, column_names) {
   
-    # make two copies of column with name 'column_name'
-  # YYY will be values with >2sd removed
-  # ZZZ will be the >2sd values that were removed from YYY
-  # after all done will rename columns
-  df$YYY <- df[column_index]
-  df$YYY[z<=2.0] <- NA
-  colnames(df)[which(names(df)=="YYY")] <- paste(column_name, "(<=2sd)", sep="")
+  for (column_name in column_names) {
+    # column index of 'column_name'
+    column_index <- which(names(df)==column_name)
   
-  df$ZZZ <- df[column_index]
-  df$ZZZ[z>2.0] <- NA
-  colnames(df)[which(names(df)=="ZZZ")] <- paste(column_name, "(>2sd)", sep="")
-  
+    # Assuming that the column was found....
+    # Get mean, sd, then compute z scores
+    m <- sapply(df[column_index], mean, na.rm=TRUE)
+    s <- sapply(df[column_index], sd, na.rm=TRUE)
+    z <- sapply(df[column_index], function(x)(abs((x-m)/s)))
+    
+      # make two copies of column with name 'column_name'
+    # YYY will be values with >2sd removed
+    # ZZZ will be the >2sd values that were removed from YYY
+    # after all done will rename columns
+    df$YYY <- df[column_index]
+    df$YYY[z<=2.0] <- NA
+    colnames(df)[which(names(df)=="YYY")] <- paste(column_name, "(<=2sd)", sep="")
+    
+    df$ZZZ <- df[column_index]
+    df$ZZZ[z>2.0] <- NA
+    colnames(df)[which(names(df)=="ZZZ")] <- paste(column_name, "(>2sd)", sep="")
+  }  
   df
 }
