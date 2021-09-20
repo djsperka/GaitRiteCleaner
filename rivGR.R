@@ -128,11 +128,11 @@ do2sdGR <- function(df, column_names) {
     # after all done will rename columns
     df$YYY <- df[column_index]
     df$YYY[z<=2.0] <- NA
-    colnames(df)[which(names(df)=="YYY")] <- paste(column_name, "(<=2sd)", sep="")
+    colnames(df)[which(names(df)=="YYY")] <- paste(column_name, "(>2sd)", sep="")
     
     df$ZZZ <- df[column_index]
     df$ZZZ[z>2.0] <- NA
-    colnames(df)[which(names(df)=="ZZZ")] <- paste(column_name, "(>2sd)", sep="")
+    colnames(df)[which(names(df)=="ZZZ")] <- paste(column_name, "(<=2sd)", sep="")
   }  
   df
 }

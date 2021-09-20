@@ -4,6 +4,10 @@ Small set of utilities for processing data from the GaitRite system.
 
 Processing steps taken from documentation provided by Rivera lab. 
 
+The 'data' folder in this repo has 4 data files: full-single-1,2,3,4.csv - these are taken
+from the excel spreadsheets that Ellery sent on 9/17/2021. To generate these files, I open the 
+sheets in Google Sheets, then do File > Download > CSV, current sheet. 
+
 Processing steps:
 
 ```
