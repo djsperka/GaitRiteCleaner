@@ -10,9 +10,18 @@ library(dplyr)
 # 
 # This list is used to reduce the dataset to just these columns for subsequent 
 # processing (see processGR) 
+#
+# NOTE: The names of columns must exist AFTER THE RAW CSV FILE IS LOADED. That
+# method (read_csv, that is) will deduplicate column names if duplicates exist. 
+# The scheme used for deduplication is to append "...N" to the end of each of
+# the duplicated names -- substituting the column NUMBER for N. In the case of
+# the GaitRite data, the column "Pt Record #" occurs twice, so after calling 
+# read_csv those columns are named "Pt Record #...2" and "Pt Record #...9". To
+# make this step work, we change the name in 'columnsReduced' to be 
+# "Pt Record #...2", and 'reduceGR' works as expected. 
 
 columnsReduced <- c(
-  "Pt Record #",        
+  "Pt Record #...2",        
   "Leg Length Left",  
   "Leg Length Right",  
   "Comments",
