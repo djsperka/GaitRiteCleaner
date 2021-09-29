@@ -31,32 +31,14 @@ subsequent processing. Each column name must be spelled exactly right!
 
 These columns are processed according to the 'Excel' analysis instructions (zeros removed, outlier removal). Like the first column, the column names must be spelled exactly right!
 
-## Steps in the pipeline
+## Notes about the processing steps. 
 
-I've attempted to duplicate steps outlined in the documents provided. Here is a brief explanation of each step.
+I've attempted to duplicate steps outlined in the documents provided. In earlier versions of this repo I wrote out all the processing steps as a pipeline. In the current version, however, the pipeline is replaced with a single method, *processGR*. The entire analysis is performed in that function -- there are no other steps (other than saving the result to a file, and any other subsequent processing you may do). 
 
-
-### reduceGR
-
-This method pulls a subset of columns (with all their data) from a data.frame. 
-
-```
-reduced <- reduceGR(df, column_names)
-```
-
-### dezeroGR
-
-This method removes zeros (a specific step mentioned in the documents provided) from the columns of interest (the columns in the input list), and replaces them with "NA", not-a-number. 
-
-Input is a reduced data.frame (output from *reduceGR*) and a vector of column names (the columns to work on). 
-
-```
-dezero <- dezeroGR(reduced, column_names_to_work_on)
-```
 
 ### do2sdGR
 
-This method removes outliers from each column of interest. i believe I have followed the instructions, these are the steps:
+This method, which is called from *processGR*, removes outliers from each column of interest. The input columns are named in the array *columnsToProcess*. i believe I have followed the instructions, these are the steps:
 
 1. find mean and standard deviation
 2. remove outliers (greater than 2 standard deviations from mean)
@@ -64,8 +46,7 @@ This method removes outliers from each column of interest. i believe I have foll
 The instructions seem to indicate that the removed values be retained. I've chosen to add two columns for each value being processed. For example, after processing 
 the *Step Length* column, there are two additional columns named *Step Length(>2sd)* and *Step Length(<=2sd)*. 
 
-I've not made this method work with a list of input columns, so instead it works on just a single column at a time. Since we process 6 columns in this way, you 
-must run this method 6 times, and you end up with 12 additional columns. 
+
 
 
 
