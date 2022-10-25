@@ -1,0 +1,138 @@
+original_column_names,redcap_column_names
+First Name  ,gr_first_name
+Last Name,gr_last_name
+Test Record #,test_record_num
+Pt Record #,pt_record_num
+Date / Time of Test,date_time_of_test
+Distance,distance
+Ambulation Time,ambulation_time
+Velocity,velocity
+Step Count,step_count
+Cadence,cadence
+Step Time(sec) L,step_time_sec_lt
+Step Length(cm) L,step_length_cm_lt
+Step Time(sec) R,step_time_sec_rt
+Step Length(cm) R,step_length_cm_rt
+Step Extremity(ratio) L,step_extremity_ratio_lt
+Step Extremity(ratio) R,step_extremity_ratio_rt
+Cycle Time(sec) L,cycle_time_sec_lt
+Cycle Time(sec) R,cycle_time_sec_rt
+Stride Length(cm) L,stride_length_cm_lt
+Stride Length(cm) R,stride_length_cm_rt
+HH Base Support (cm) L,hh_base_support_cm_lt
+HH Base Support (cm) R,hh_base_support_cm_rt
+Swing % of Cycle L,swing_pct_of_cycle_lt
+Swing % of Cycle R,swing_pct_of_cycle_rt
+Swing Time(sec) L,swing_time_sec_lt
+Swing Time(sec) R,swing_time_sec_rt
+Stance % of Cycle L,stance_pct_of_cycle_lt
+Stance % of Cycle R,stance_pct_of_cycle_rt
+Stance Time(sec)  L,stance_time_sec_lt
+Stance Time(sec)  R,stance_time_sec_rt
+Single Supp % Cycle L,sgl_supp_pct_cycle_lt
+Single Supp % Cycle R,sgl_supp_pct_cycle_rt
+Single Supp. Time(sec) L,sgl_supp_time_sec_lt
+Single Supp. Time(sec) R,sgl_supp_time_sec_rt
+Double Supp % Cycle L,dbl_supp_pct_cycle_lt
+Double Supp % Cycle R,dbl_supp_pct_cycle_rt
+Double Supp. Time(sec) L,dbl_supp_time_sec_lt
+Double Supp. Time(sec) R,dbl_supp_time_sec_rt
+Step Time Differential,step_time_ratio
+Step Length Differential,step_length_ratio
+Cycle Time Differential,cycle_time_ratio
+Functional Amb. Profile,fap_score
+Treatment Count,treatment_count
+Footfalls,footfalls
+Comments,condition_comments
+Normalized Velocity  ,normalized_velocity
+Leg Length (cm) L,leg_length_cm_lt
+Leg Length (cm) R,leg_length_cm_rt
+Number of Passes,number_of_passes
+Ambulatory Devices,ambulatory_devices
+Ambulatory Aids,ambulatory_aids
+User,user
+Toe In / Out L,toe_in_out_lt
+Toe In / Out R,toe_in_out_rt
+Heel Off On Time L,heel_off_on_time_lt
+Heel Off On Time R,heel_off_on_time_rt
+Heel Off On Perc L,heel_off_on_perc_lt
+Heel Off On Perc R,heel_off_on_perc_rt
+Double Support Load Time L,dbl_supp_load_time_lt
+Double Support Load Time R,dbl_supp_load_time_rt
+Double Support Load %GC L,dbl_supp_load_pct_gc_lt
+Double Support Load %GC R,dbl_supp_load_pct_gc_rt
+Double Support Unload Time L,dbl_supp_unload_time_lt
+Double Support Unload Time R,dbl_supp_unload_time_rt
+Double Support Unload %GC L,dbl_supp_unload_pct_gc_lt
+Double Support Unload %GC R,dbl_supp_unload_pct_gc_rt
+Asst Ortho etc 1,asst_ortho_etc_1
+Asst Ortho etc  2,asst_ortho_etc_2
+Asst Ortho etc 3,asst_ortho_etc_3
+Asst Ortho etc 4,asst_ortho_etc_4
+Asst Ortho etc 5,asst_ortho_etc_5
+Type of Test,type_of_test
+Software Version,software_version
+Number of Pads,number_of_pads
+Normal Group Code,normal_group_code
+Standard Walk Steps,standard_walk_steps
+Standard Amb Time,standard_amb_time
+Stride Velocity Left,stride_velocity_lt
+Stride Velocity Right,stride_velocity_rt
+Shoe Flag,shoe_flag
+Expected Foot Length,expected_foot_length
+Expected Foot Width,expected_foot_width
+Foot Length Left,foot_length_lt
+Foot Width Left,foot_width_lt
+Foot Length Right,foot_length_rt
+Foot Width Right,foot_width_rt
+Step Len Std Dev Left,step_len_std_dev_lt
+Step Len Std Dev Right,step_len_std_dev_rt
+Step Time Std Dev Left,step_time_std_dev_lt
+Step Time Std Dev Right,step_time_std_dev_rt
+Stride Length Std Dev Left,str_len_std_dev_lt
+Stride Length Std Dev Right,str_len_std_dev_rt
+Stride Time Std Dev Left,str_time_std_dev_lt
+Stride Time Std Dev Right,str_time_std_dev_rt
+Swing Time Std Dev Left,swing_time_std_dev_lt
+Swing Time Std Dev Right!,swing_time_std_dev_rt
+Stance Time Std Dev Left,stance_time_std_dev_lt
+Stance Time Std Dev Right,stance_time_std_dev_rt
+Stride Velocity Std Dev Left,stride_vel_std_dev_lt
+Stride Velocity Std Dev Right,stride_vel_std_dev_rt
+Single Supp Time Std Dev Left,sgl_supp_time_std_dev_lt
+Single Supp Time Std Dev Right,sgl_supp_time_std_dev_rt
+Double Supp Time Std Dev Left,dbl_supp_time_std_dev_lt
+Double Supp Time Std Dev Right,dbl_supp_time_std_dev_rt
+Heel Off On Std Dev Left,heel_off_on_std_dev_lt
+Heel Off On Std Dev Right,heel_off_on_std_dev_rt
+Supp Base Std Dev Left,supp_base_std_dev_lt
+Supp Base Std Dev Right,supp_base_std_dev_rt
+Foot Length Std Dev Left,foot_length_std_dev_lt
+Foot Length Std Dev Right,foot_length_std_dev_rt
+Foot Width Std Dev Left,foot_width_std_dev_lt
+Foot Width Std Dev Right,foot_width_std_dev_rt
+Computer Time (MSec),computer_time_msec
+Trigger 1 0,trigger_1_0
+Trigger 1 1,trigger_1_1
+Trigger 2 0,trigger_2_0
+Trigger 2 1,trigger_2_1
+Trigger 1 E,trigger_1_e
+Trigger 1 E 1,trigger_1_e_1
+Trigger 2 E,trigger_2_e
+Trigger 2 E 1,trigger_2_e_1
+Inclinometer1,inclinometer1
+Inclin_Avg_Tilt_LR,inclin_avg_tilt_lr
+Inclin_Avg_Tilt_FB,inclin_avg_tilt_fb
+Inclin_Min_Tilt_LR,inclin_min_tilt_lr
+Inclin_Max_Tilt_LR,inclin_max_tilt_lr
+Inclin_Max_Tilt_FB,inclin_max_tilt_fb
+Inclin_Min_Tilt_FB,inclin_min_tilt_fb
+Inclin_Veloc_Tilt_LR,inclin_veloc_tilt_lr
+Inclin_Veloc_Tilt_FB,inclin_veloc_tilt_fb
+Inclin_SD_Tilt_LR,inclin_sd_tilt_lr
+Inclin_SD_Tilt_FB,inclin_sd_tilt_fb
+Inclinometer2,inclinometer2
+Inclin2_Avg_Tilt_LR,inclin2_avg_tilt_lr
+Inclin2_Avg_Tilt_FB,inclin2_avg_tilt_fb
+Inclin2_Min_Tilt_LR,inclin2_min_tilt_lr
+Inclin2_Max_Tilt_LR,inclin2_max_tilt_lr
