@@ -54,6 +54,45 @@ You should see this dialog:
 ![GaitRiteCleaner dialog](grx-dialog.png)
 
 1. Click *Select* to choose the input folder. This should be a folder containing
-GaitRite export files (in either csv or xlsx format). Filenames should 
-be in the format NNNNNN-NNN\*.csv, where *\** can be anything
+GaitRite export files (in either csv or xlsx format). Filenames must 
+start with the pattern NNNNNN-NNN. Any characters may follow this pattern
+(which should be the FX ID for the subject). There should be NO OTHER FILES in this folder!
+
+2. Enter the event name to be assigned to this data. No spaces - this should be an EXACT event name as defined
+in the RedCap project. 
+
+3. Click *Select* to choose the output filename. If the file already exists you will be asked if you want to overwrite the 
+file. 
+
+4. Click this button to start the process. You should see output in your command window that looks like this (my example folder had just 4 input files):
+
+```batch
+C:\work\reckup\GaitRiteCleaner-master>python grx.py
+This script lives in C:\work\reckup\GaitRiteCleaner-master
+Expecting these input files:
+Column names: C:\work\reckup\GaitRiteCleaner-master\data\column_names.csv
+FX/TRAX List: C:\work\reckup\GaitRiteCleaner-master\data\FX_ID_TRAX_ID_List.xlsx
+
+Dirname set to C:/work/rivera/GaitRiteCleaner/data/test
+
+Input file C:/work/rivera/GaitRiteCleaner/data/test event aaasdfasdf
+
+
+Input file C:/work/rivera/GaitRiteCleaner/data/test\100398-100_05_23_19.xlsx
+FXS from filename: 100398-100
+FXS not found in lookup table, use 000: 100398-100/000
+
+Input file C:/work/rivera/GaitRiteCleaner/data/test\100427-100_09_28_21.xlsx
+FXS from filename: 100427-100
+FXS/TRAX ID: 100427-100/476
+
+Input file C:/work/rivera/GaitRiteCleaner/data/test\500011-572_10_06_21.xlsx
+FXS from filename: 500011-572
+FXS not found in lookup table, use 000: 500011-572/000
+
+Input file C:/work/rivera/GaitRiteCleaner/data/test\500011-573_11_04_21.xlsx
+FXS from filename: 500011-573
+FXS/TRAX ID: 500011-573/545
+Writing 12 records to output file C:/work/rivera/test_out_5.csv
+```
 
