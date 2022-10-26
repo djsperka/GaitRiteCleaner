@@ -8,7 +8,19 @@ import pandas as pd
 import os
 import re
 
+def confirmClobber(output_filename):
+    """ Pop a message box to get confirmation that an existing file can be overwritten
 
+        Returns
+        -------
+        bool: ``True`` if user confirms overwrite (or if filename does not exist), ``False`` if user cancels overwrite
+    """
+    if not os.path.isfile(output_filename):
+        return True
+    confirmtxt = "The output filename you selected already exists.\n\nAre you sure you want to overwrite the file?"
+    if tk.messagebox.askokcancel("Close", confirmtxt, default="cancel", icon="warning"):
+        return True
+    return False 
 
 def grLoadDf(filename):
     if filename.lower().endswith("csv"):
@@ -107,10 +119,16 @@ def grPrepareTestRecords(file_or_dir, event_name, instrument, dictColumns, dictF
 if (__name__ == '__main__'):
     import sys
 
+    # get path of this script
+    script_folder = os.path.dirname(os.path.realpath(__file__))
+    column_names_file = os.path.join(script_folder, 'data', 'column_names.csv')
+    lookup_file = os.path.join(script_folder, 'data', 'FX_ID_TRAX_ID_List.xlsx')
+    print("This script lives in %s\nExpecting these input files:\nColumn names: %s\nFX/TRAX List: %s\n" % (script_folder, column_names_file, lookup_file))
+    
     # load columns
-    cdf = grLoadDf("data/column_names.csv")
+    cdf = grLoadDf(column_names_file)
     dictColumns = dict(zip(cdf.iloc[:,0], cdf.iloc[:,1])) 
-    ldf = grLoadDf("data/FX_ID_TRAX_ID_List.xlsx")
+    ldf = grLoadDf(lookup_file)
     dictFXLookup = dict(zip(ldf.iloc[:,0], ldf.iloc[:,1])) 
 
     if len(sys.argv) == 4:
@@ -121,54 +139,74 @@ if (__name__ == '__main__'):
         df.to_csv(sys.argv[3])
     else:
         window = tk.Tk()
-        filename=tk.StringVar()
-        filename.set("None Selected")
-        map_filename = tk.StringVar()
-        map_filename.set(os.path.join(os.getcwd(), r"data\FX_ID_TRAX_ID_List.xlsx"))
-        window.title("Select GaitRite file(s)")
-        window.geometry('400x300')
+        input_folder=tk.StringVar()
+        output_filename = tk.StringVar()
+        window.title("Create RedCap import for GaitRite data")
+        window.geometry('460x150')
 
 
-        # first row
-        doFolder = tk.IntVar()
-        doFolder.set(1)
-        lbl = tk.Label(window, text="Folder:")
-        lbl.grid(row=0, column=0)
-        flbl = tk.Label(window, textvariable=filename, width=60)
-        flbl.grid(row=0, column=1)
+        # Input folder
+        lbl = tk.Label(window, text="Input Folder:", width=15)
+        lbl.grid(row=0, column=0, ipadx=1, ipady=1, sticky='E')
+        entryInputFolder = tk.Label(window, textvariable=input_folder, width=40)
+        entryInputFolder.grid(row=0, column=1, ipadx=1, ipady=1, sticky='W')
 
-        # second row
-        def chkFolderChanged():
-            if (doFolder.get() == 1):
-                lbl.config(text='Folder:')
-            else:
-                lbl.config(text='File:')
-        chkFolder = tk.Checkbutton(window, text='Folder?',variable=doFolder, onvalue=1, offvalue=0, command=chkFolderChanged)
-        chkFolder.grid(row=1, column=0)
 
+        # called when "Select" button (for folder/file) is pressed
         def select_clicked():
-            if doFolder.get() == 0:
-                filename.set(tkfd.askopenfilename())
-                print('Filename set to %s\n' % filename.get())
-            else:
-                filename.set(tkfd.askdirectory(mustexist=True))
-                print('Dirname set to %s\n' % filename.get())
-                
+            input_folder.set(tkfd.askdirectory(mustexist=True))
+            print('Dirname set to %s\n' % input_folder.get())
+
+        # Now the button itself        
         btn = tk.Button(window, text="Select", command=select_clicked)
-        btn.grid(row=1, column=1)
+        btn.grid(row=0, column=2, ipadx=1, ipady=1, sticky='E')
+
 
         # event name
         eventName = tk.StringVar();
-        lblEvent = tk.Label(window, text='Event Name:')
-        lblEvent.grid(row=2, column=0)
-        entryEventName = tk.Entry(window, width=20, textvariable=eventName)
-        entryEventName.grid(row=2, column=1)
+        lblEvent = tk.Label(window, text='Event Name:', width=15)
+        lblEvent.grid(row=1, column=0, ipadx=1, ipady=1, sticky='E')
+        entryEventName = tk.Entry(window, width=40, textvariable=eventName)
+        entryEventName.grid(row=1, column=1, ipadx=1, ipady=1, sticky='W')
+
+        
+        # output file label
+        olbl = tk.Label(window, text="Output file:", width=15)
+        olbl.grid(row=2, column=0, ipadx=1, ipady=1, sticky='E')
+        oflbl = tk.Label(window, textvariable=output_filename, width=40)
+        oflbl.grid(row=2, column=1, ipadx=1, ipady=1, sticky='W')
+
+        def output_file_select_clicked():
+            output_filename.set(tkfd.asksaveasfilename(initialdir=r"C:\work\rivera", filetypes=[("csv file", "*.csv")], defaultextension=".csv"))
+
+        # output file select        
+        obtn = tk.Button(window, text="Select", command=output_file_select_clicked)
+        obtn.grid(row=2, column=2, ipadx=1, ipady=1)
+
+#=======================================
 
         # go button
         def goClicked():
-            print("file %s event %s\n" % (filename.get(), eventName.get()))
-            
-        btnGo = tk.Button(window, text='Go', command=goClicked)
-        btnGo.grid(row=3, column=0)
+            print("Input file %s event %s\n" % (input_folder.get(), eventName.get()))
+            if len(input_folder.get())==0:
+                tk.messagebox.showwarning(title="Input error", message="Please select an input folder")
+                return
+            elif len(output_filename.get())==0:
+                tk.messagebox.showwarning(title="Input error", message="Please select an output file")
+                return
+            elif len(entryEventName.get())==0:
+                tk.messagebox.showwarning(title="Input error", message="Please enter an event name")
+                return
+
+            if confirmClobber(output_filename.get()):
+                df = grPrepareTestRecords(input_folder.get(), eventName.get(), "gaitrite_data_entry", dictColumns, dictFXLookup)
+                print("Writing %d records to output file %s\n" % (len(df), output_filename.get()))
+                df.to_csv(output_filename.get())
+                # clear dialog
+                input_folder.set("")
+                output_filename.set("")
+
+        btnGo = tk.Button(window, text='Process GaitRite data & Generate RedCap import file', command=goClicked)
+        btnGo.grid(row=3, columnspan=3)
 
         window.mainloop()
