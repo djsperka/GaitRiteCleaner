@@ -1,54 +1,59 @@
 # GaitRiteCleaner
 
-Small set of utilities for processing data from the GaitRite system. 
+Python script for processing data exported from the GaitRite system, 
+and preparing file(s) that may be imported to RedCap.
 
-Processing steps taken from documentation provided by Rivera lab. 
+## Getting Started
 
-The 'data' folder in this repo has 4 data files: full-single-1,2,3,4.csv - these are taken
-from the excel spreadsheets that Ellery sent on 9/17/2021. To generate these files, I open the 
-sheets in Google Sheets, then do File > Download > CSV, current sheet. 
+It is assumed that you are running on Windows, though this script will run on other platforms.
 
-Processing steps:
-
+1. Install Python for windows. Download [here](https://www.python.org/downloads/). On the first page of the installer, 
+check the box labelled "Add Python to Path". 
+2. Check that python is in your path. Open a DOS command window. Type "python -V", you should get back the version number:
+```batch
+C:\work\rivera>python -V
+Python 3.10.8
 ```
-source 'rivGR.R'
-df <- processGR('./data/newtest.csv')
+
+> If the installer did *not* add python to your path, you will get output like this:
+
+```batch
+C:\work\rivera>python -V
+'python' is not recognized as an internal or external command,
+operable program or batch file.
 ```
-The result 'df' is a data.frame with the reduced, processed, data set. See below for details on the contents of that data.frame. THIS DATA.FRAME IS NOT YET SAVED TO A FILE! I have assumed that some further processing will be done on this data, so I've not taken the small step of writing the data to a file.
 
-I've removed a bunch of code that was related to re-formatting the input files. Now, the processing consists of a short function, processGR, that runs the two steps in the processing. 
+> To fix this, follow the instructions [here](https://datatofish.com/add-python-to-windows-path/).
 
-## Lists that control the processing
+3. Install the packages *pandas* and *openpyxl*. Installing these packages will cause several
+other packages to be installed as well. 
 
-The source file 'rivGR.R' has two string lists that control its behavior. These can be changed, as long as the column names exist in the data, and they are spelled correctly!
+```batch
+C:\work\rivera>python -m pip install pandas openpyxl
+```
 
-### columnsReduced
+4. Now download the code. 
+4.1 If you have git, you can clone the repository:
+```batch
+C:\work\rivera> git clone https://github.com/djsperka/GaitRiteCleaner
+```
+4.2 You can just download [this zip file](https://github.com/djsperka/GaitRiteCleaner/archive/refs/heads/master.zip) 
+with the latest version of the code. Unzip to a local folder. 
 
-This is a list of columns that are taken from the raw input file and kept in 
-subsequent processing. Each column name must be spelled exactly right! 
+## How to run the script
+To run the script, open a Windows command prompt and navigate to the folder where
+you put the source code in step 4 above. 
 
-### columnsToProcess
+Run this command to start the dialog:
+```batch
+c:\work\rivera\GaitRiteCleaner> python grx.python
+```
 
-These columns are processed according to the 'Excel' analysis instructions (zeros removed, outlier removal). Like the first column, the column names must be spelled exactly right!
+You should see this dialog:
 
-## Notes about the processing steps. 
+![GaitRiteCleaner dialog](grx-dialog.png)
 
-I've attempted to duplicate steps outlined in the documents provided. In earlier versions of this repo I wrote out all the processing steps as a pipeline. In the current version, however, the pipeline is replaced with a single method, *processGR*. The entire analysis is performed in that function -- there are no other steps (other than saving the result to a file, and any other subsequent processing you may do). 
-
-
-### do2sdGR
-
-This method, which is called from *processGR*, removes outliers from each column of interest. The input columns are named in the array *columnsToProcess*. i believe I have followed the instructions, these are the steps:
-
-1. find mean and standard deviation
-2. remove outliers (greater than 2 standard deviations from mean)
-
-The instructions seem to indicate that the removed values be retained. I've chosen to add two columns for each value being processed. For example, after processing 
-the *Step Length* column, there are two additional columns named *Step Length(>2sd)* and *Step Length(<=2sd)*. 
-
-
-
-
-
-
+1. Click *Select* to choose the input folder. This should be a folder containing
+GaitRite export files (in either csv or xlsx format). Filenames should 
+be in the format NNNNNN-NNN\*.csv, where *\** can be anything
 
