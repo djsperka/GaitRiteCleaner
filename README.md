@@ -33,12 +33,13 @@ C:\work\rivera>python -m pip install pandas openpyxl
 ```
 
 4. Now download the code. 
-4.1 If you have git, you can clone the repository:
-```batch
-C:\work\rivera> git clone https://github.com/djsperka/GaitRiteCleaner
-```
-4.2 You can just download [this zip file](https://github.com/djsperka/GaitRiteCleaner/archive/refs/heads/master.zip) 
+    1. You can just download [this zip file](https://github.com/djsperka/GaitRiteCleaner/archive/refs/heads/master.zip) 
 with the latest version of the code. Unzip to a local folder. 
+
+    2. If you have git, you can clone the repository:
+```batch
+C:\work\rivera> git clone https://github.com/djsperka/GaitRiteCleaner.git
+```
 
 ## How to run the script
 To run the script, open a Windows command prompt and navigate to the folder where
