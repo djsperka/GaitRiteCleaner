@@ -105,9 +105,9 @@ def grPrepareTestRecords(file_or_dir, event_name, instrument, dictColumns, dictF
 
         # Assign testtype based on contents of 'comments'
         df4.insert(6, 'testtype', 5)
-        df4.loc[df4.condition_comments.str.contains("control", na=False), 'testtype'] = 1
-        df4.loc[df4.condition_comments.str.contains("light", na=False), 'testtype'] = 2
-        df4.loc[df4.condition_comments.str.contains("loaded", na=False), 'testtype'] = 3
+        df4.loc[df4.condition_comments.str.contains("control", case=False, na=False), 'testtype'] = 1
+        df4.loc[df4.condition_comments.str.contains("light", case=False, na=False), 'testtype'] = 2
+        df4.loc[df4.condition_comments.str.contains("loaded", case=False, na=False), 'testtype'] = 3
           
         if bigdf is None:
             bigdf = df4
